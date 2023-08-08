@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerText: {
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: 'bold',
     color: '#FFF',
   },
@@ -220,6 +220,8 @@ const styles = StyleSheet.create({
     borderColor: '#FFF',
     borderRadius: 25,
     marginBottom:5,
+    margin:20,
+    marginHorizontal:30,
   },
   inputText: {
     fontSize: 20,
