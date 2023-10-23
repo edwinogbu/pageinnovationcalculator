@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "pageinnovationcalculator",
-    "slug": "pageinnovationcalculator",
+    "name": "PageInnCalculator",
+    "slug": "pageinncalculator",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -22,7 +22,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.blessedcoder40.pageinnovationcalculator"
+      "package": "com.blessedcoder40.pageinncalculator"
     },
     "web": {
       "favicon": "./assets/favicon.png"

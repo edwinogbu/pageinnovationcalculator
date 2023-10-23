@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import {
   View,
@@ -11,7 +10,6 @@ import {
   SafeAreaView,
 } from 'react-native';
 
-// Function to convert degrees to radians
 const degToRad = (degrees) => (degrees * Math.PI) / 180;
 
 const App = () => {
@@ -32,14 +30,40 @@ const App = () => {
       deleteLastCharacter();
     } else if (value === 'π') {
       setInput((prevInput) => prevInput + Math.PI);
-    } else if (value === '√' || value === '%') {
-      setInput((prevInput) => prevInput + value);
       calculateResult();
+    } else if (value === '√') {
+      setInput((prevInput) => {
+        const result = Math.sqrt(eval(prevInput));
+        return result.toString();
+      });
+    } else if (value === '%') {
+      setInput((prevInput) => {
+        const result = eval(prevInput + '/100');
+        return result.toString();
+      });
+    } else if (value === '!') {
+      setInput((prevInput) => {
+        const factorialExpression = `${prevInput}!`;
+        const result = calculateFactorial(parseInt(prevInput));
+        setResult(`${factorialExpression} = ${result}`);
+        return `${factorialExpression} = ${result}`;
+      });
     } else if (value === '(' || value === ')') {
       setInput((prevInput) => prevInput + value);
     } else {
       setInput((prevInput) => prevInput + value);
     }
+  };
+
+  const calculateFactorial = (n) => {
+    if (n === 0 || n === 1) {
+      return 1;
+    }
+    let result = 1;
+    for (let i = 2; i <= n; i++) {
+      result *= i;
+    }
+    return result;
   };
 
   const clearInput = () => {
@@ -50,21 +74,16 @@ const App = () => {
 
   const calculateResult = () => {
     try {
-      // Replace custom functions and symbols
       const expression = input
-        .replace(/√/g, 'sqrt')
         .replace(/x(?=\d)/g, '*')
         .replace(/sin\(/g, 'Math.sinDeg(')
         .replace(/cos\(/g, 'Math.cosDeg(')
         .replace(/tan\(/g, 'Math.tanDeg(')
-        .replace(/\^2/g, '**2')
-        .replace(/factorial\(/g, 'factorial(')
+        .replace(/\^/g, '**')
         .replace(/%/g, '/100');
 
-      // Evaluate the expression
       const evaluatedResult = eval(expression);
 
-      // Check for special cases (Infinity, NaN)
       if (!Number.isFinite(evaluatedResult)) {
         throw new Error('Invalid result');
       }
@@ -82,12 +101,10 @@ const App = () => {
     setError('');
   };
 
-  // Custom trigonometric functions for sine, cosine, and tangent in degrees
   Math.sinDeg = (degrees) => Math.sin(degToRad(degrees));
   Math.cosDeg = (degrees) => Math.cos(degToRad(degrees));
   Math.tanDeg = (degrees) => Math.tan(degToRad(degrees));
 
-  // Button configurations
   const buttonRows = [
     [
       { label: '7', value: '7' },
@@ -110,37 +127,36 @@ const App = () => {
     [
       { label: '0', value: '0' },
       { label: '.', value: '.' },
-      { label: '%', value: '%', textColor: 'darkgreen' }, // Set text color for % to dark green
+      { label: '%', value: '%', textColor: 'darkgreen' },
       { label: '+', value: '+' },
     ],
     [
-      { label: 'DEL', value: 'DEL', textColor: 'purple' }, // Set text color for DEL to purple
-      { label: '!', value: 'factorial(' },
+      { label: '√', value: '√', textColor: 'darkblue' },
+      { label: '!', value: '!', textColor: 'purple' },
       { label: '±', value: '±' },
-      { label: 'π', value: 'π', textColor: 'darkblue' }, // Set text color for π to dark blue
+      { label: 'π', value: 'π', textColor: 'darkblue' },
     ],
     [
-      { label: 'sin', value: 'sin(', textColor: 'blue' }, // Set text color for sin to blue
-      { label: 'cos', value: 'cos(', textColor: 'green' }, // Set text color for cos to green
-      { label: 'tan', value: 'tan(', textColor: 'purple' }, // Set text color for tan to purple
-      { label: 'log', value: 'log(', textColor: 'orange' }, // Set text color for log to orange
+      { label: 'sin', value: 'sin(', textColor: 'blue' },
+      { label: 'cos', value: 'cos(', textColor: 'green' },
+      { label: 'tan', value: 'tan(', textColor: 'purple' },
+      { label: '^', value: '^', textColor: 'darkorange' },
     ],
     [
-      { label: 'x^2', value: 'x^2', textColor: 'darkorange' }, // Set text color for x^2 to dark orange
-      { label: '√', value: 'sqrt(', textColor: 'darkblue' }, // Set text color for √ to dark blue
-      { label: '(', value: '(', textColor: 'black' }, // Set text color for ( to black
-      { label: ')', value: ')', textColor: 'black' }, // Set text color for ) to black
+      { label: 'DEL', value: 'DEL', wide:true, textColor: 'purple' },
+      { label: '(', value: '(', textColor: 'black' },
+      { label: ')', value: ')', textColor: 'black' },
     ],
     [
-      { label: 'C', value: 'C', wide: true, textColor: 'white' }, // "C" button with width of "=" button and white text
-      { label: '=', value: '=', wide: true, backgroundColor: '#00FF00', textColor: 'white' }, // "=" button with green background and width of "C" button and white text
+      { label: 'C', value: 'C', wide: true, textColor: 'white' },
+      { label: '=', value: '=', wide: true, backgroundColor: '#00FF00', textColor: 'white' },
     ],
   ];
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>Page Innovations Technologies</Text>
+        <Text style={styles.headerText}>Scientific Calculator</Text>
       </View>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -183,6 +199,7 @@ const App = () => {
             </View>
           ))}
         </View>
+        <Text style={styles.copyrightText}>© Eddy@pageInnovation</Text>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -195,9 +212,11 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: '#00083C',
-    paddingVertical: 5,
+    paddingVertical: 10,
     paddingHorizontal: 10,
     alignItems: 'center',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   headerText: {
     fontSize: 16,
@@ -219,9 +238,9 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#FFF',
     borderRadius: 25,
-    marginBottom:5,
-    margin:20,
-    marginHorizontal:30,
+    marginBottom: 5,
+    margin: 20,
+    marginHorizontal: 30,
   },
   inputText: {
     fontSize: 20,
@@ -262,15 +281,15 @@ const styles = StyleSheet.create({
     color: '#333333',
   },
   buttonEqual: {
-    backgroundColor: '#00FF00', // Green color for the "=" button
+    backgroundColor: '#00FF00',
     width: Dimensions.get('window').width / 2.0,
     borderRadius: 10,
   },
   buttonEqualText: {
-    color: '#FFFFFF', // White text color for the "=" button
+    color: '#FFFFFF',
   },
   buttonRed: {
-    backgroundColor: 'red', // Red color for the "C" button
+    backgroundColor: 'red',
     width: Dimensions.get('window').width / 3.1,
     borderRadius: 10,
   },
@@ -280,7 +299,14 @@ const styles = StyleSheet.create({
     color: 'red',
     marginBottom: 10,
   },
+
+  copyrightText: {
+    textAlign: 'center',
+    fontSize: 12,
+    color: '#999',
+  },
+
 });
 
-
 export default App;
+
